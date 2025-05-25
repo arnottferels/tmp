@@ -17,4 +17,4 @@ jobs:
           python-version: '3.x'
 
       - name: Run script with secret
-        run: python secret_test.py "${{ secrets.API_KEY }}"
+        run: python test.py "${{ secrets.API_KEY }}"
