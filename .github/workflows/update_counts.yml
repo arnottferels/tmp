@@ -34,7 +34,7 @@ jobs:
         env:
           UPDATE_COUNTS_WEB_APP_URL: ${{ secrets.UPDATE_COUNTS_WEB_APP_URL }}
         run: |
-          python update_counts.py "$UPDATE_COUNTS_WEB_APP_URL"
+          python update_counts.py
         timeout-minutes: 5
 
       - name: Set current datetime
