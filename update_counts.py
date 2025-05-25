@@ -1,15 +1,18 @@
-import os
+import sys
 import json
 import aiohttp
 import asyncio
 from dataclasses import dataclass, asdict
 from typing import Dict, List
 
-FETCH_URL = "https://arnottferels.github.io/a/data/redirect.json"
-API_URL = os.getenv("API_URL")
+if len(sys.argv) > 1:
+    API_URL = sys.argv[1]
+else:
+    print("Error: UPDATE_COUNTS_WEB_APP_URL is missing.")
+    sys.exit(1)
 
-if not API_URL:
-    raise ValueError("API_URL environment variable not set")
+FETCH_URL = "https://arnottferels.github.io/a/data/redirect.json"
+
 
 RAW_FILE = "raw.json"
 OUTPUT_FILE = "counts.json"
@@ -43,8 +46,10 @@ async def fetch_all_counts(session: aiohttp.ClientSession) -> Dict[str, int]:
             if response.status == 200:
                 data = await response.json()
                 return {k: int(v) for k, v in data.items()}
-    except Exception:
-        pass
+            else:
+                print(f"Failed to fetch counts: HTTP {response.status}")
+    except Exception as e:
+        print(f"Exception fetching counts: {e}")
     return {}
 
 
@@ -63,13 +68,13 @@ async def process_transformed_data(
     transformed_data: Dict[PathnameKey, PathCounts],
     all_counts: Dict[str, int],
 ) -> None:
-    for value in transformed_data.values():
+    for path_counts in transformed_data.values():
         total = 0
-        for pathname in value.paths_counts:
+        for pathname in path_counts.paths_counts:
             count = all_counts.get(pathname, 0)
-            value.paths_counts[pathname] = count
+            path_counts.paths_counts[pathname] = count
             total += count
-        value.total_count = total
+        path_counts.total_count = total
 
 
 async def save_transformed_data(
