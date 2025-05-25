@@ -3,12 +3,13 @@ import os
 import json
 import aiohttp
 import asyncio
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass
 from typing import Dict, List
+from dotenv import load_dotenv
 
-API_URL = os.getenv("UPDATE_COUNTS_WEB_APP_URL") or sys.exit(
-    "Error: UPDATE_COUNTS_WEB_APP_URL is missing."
-)
+load_dotenv()
+API_URL_KEY = "UPDATE_COUNTS_WEB_APP_URL"
+API_URL = os.getenv(API_URL_KEY) or sys.exit(f"Error: {API_URL_KEY} is missing.")
 
 FETCH_URL = "https://arnottferels.github.io/a/data/redirect.json"
 
@@ -79,19 +80,21 @@ async def process_transformed_data(
 async def save_transformed_data(
     transformed_data: Dict[PathnameKey, PathCounts],
 ) -> None:
+    filtered: Dict[str, Dict[str, int | Dict[str, int]]] = {}
+
+    for key, path_counts in transformed_data.items():
+        filtered_paths = {p: c for p, c in path_counts.paths_counts.items() if c > 0}
+        if not filtered_paths:
+            continue
+
+        filtered[key] = {
+            "paths_counts": filtered_paths,
+            "total_count": sum(filtered_paths.values()),
+        }
+
     with open(OUTPUT_FILE, "w") as file:
-        json.dump(
-            {
-                key: {
-                    "paths_counts": asdict(path_counts)["paths_counts"],
-                    "total_count": asdict(path_counts)["total_count"],
-                }
-                for key, path_counts in transformed_data.items()
-            },
-            file,
-            indent=2,
-        )
-    print(f"Transformed data saved to {OUTPUT_FILE}.")
+        json.dump(filtered, file, indent=2)
+    print(f"Filtered data saved to {OUTPUT_FILE}.")
 
 
 async def main() -> None:
