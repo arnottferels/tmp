@@ -1,15 +1,14 @@
 import sys
+import os
 import json
 import aiohttp
 import asyncio
 from dataclasses import dataclass, asdict
 from typing import Dict, List
 
-if len(sys.argv) > 1:
-    API_URL = sys.argv[1]
-else:
-    print("Error: UPDATE_COUNTS_WEB_APP_URL is missing.")
-    sys.exit(1)
+API_URL = os.getenv("UPDATE_COUNTS_WEB_APP_URL") or sys.exit(
+    "Error: UPDATE_COUNTS_WEB_APP_URL is missing."
+)
 
 FETCH_URL = "https://arnottferels.github.io/a/data/redirect.json"
 
