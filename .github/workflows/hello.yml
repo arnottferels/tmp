@@ -3,8 +3,11 @@ name: hello (test)
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  hello:
+  hello-test:
     runs-on: ubuntu-latest
 
     steps:

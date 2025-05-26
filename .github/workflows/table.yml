@@ -1,0 +1,49 @@
+name: Test table
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # daily at midnight UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  table:
+    runs-on: ubuntu-latest
+    env:
+      TABLE_NAME: ${{ secrets.TABLE_NAME }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Test git ls-remote
+        run: git ls-remote https://x-access-token:${{ secrets.TARGET_PAT }}@github.com/arnottferels/${{ secrets.TARGET_REPO }}.git
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Export CSV
+        run: |
+          mkdir -p table
+          YESTERDAY=$(date -u -d "yesterday" +%F)
+          echo "Exporting data for $YESTERDAY"
+
+          psql "${{ secrets.DB_URL }}" -c "\COPY (
+            SELECT id, timestamp, page_path, event_type
+            FROM ${TABLE_NAME}
+            WHERE timestamp::timestamp >= DATE '$YESTERDAY'
+              AND timestamp::timestamp < DATE '$YESTERDAY' + INTERVAL '1 day'
+          ) TO 'table/${YESTERDAY}.csv' WITH CSV HEADER"
+
+      - name: Commit and push table
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git remote set-url origin https://x-access-token:${{ secrets.TARGET_PAT }}@github.com/arnottferels/${{ secrets.TARGET_REPO }}.git
+
+          git add table/
+          git commit -m "Daily table for $YESTERDAY" || echo "No changes to commit"
+          git push origin HEAD:main
