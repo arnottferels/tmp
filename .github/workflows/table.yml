@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Test git ls-remote
-        run: git ls-remote https://x-access-token:${{ secrets.TARGET_PAT }}@github.com/arnottferels/${{ secrets.TARGET_REPO }}.git
+        run: git ls-remote ${{secrets.REPO_URL}}
 
       - name: Install PostgreSQL client
         run: sudo apt-get update && sudo apt-get install -y postgresql-client
@@ -42,7 +42,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          git remote set-url origin https://x-access-token:${{ secrets.TARGET_PAT }}@github.com/arnottferels/${{ secrets.TARGET_REPO }}.git
+          git remote set-url origin ${{secrets.REPO_URL}}
 
           git add table/
           git commit -m "Daily table for $YESTERDAY" || echo "No changes to commit"
