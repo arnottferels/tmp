@@ -1,15 +1,13 @@
-name: Export Yesterday Table
+name: Export All Tables
 
 on:
-  schedule:
-    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  table:
+  table-all:
     runs-on: ubuntu-latest
     env:
       TABLE_NAME: ${{ secrets.TABLE_NAME }}
@@ -22,21 +20,22 @@ jobs:
         with:
           token: ${{ secrets.PUSH_TOKEN }}
 
-      - name: Set yesterday date
-        run: echo "YESTERDAY=$(date -u -d 'yesterday' +%F)" >> $GITHUB_ENV
-
       - name: Install PostgreSQL client
         run: sudo apt-get install -y postgresql-client
 
-      - name: Export yesterday to CSV
+      - name: Export all days to CSV
         run: |
           mkdir -p table
-          echo "Exporting $YESTERDAY"
-          psql "$DB_URL" -c "\COPY (
-            SELECT *
-            FROM ${TABLE_NAME}
-            WHERE timestamp::date = DATE '$YESTERDAY'
-          ) TO 'table/${YESTERDAY}.csv' WITH CSV HEADER"
+          days=$(psql "$DB_URL" -t -c "SELECT DISTINCT TO_CHAR(timestamp::date, 'YYYY-MM-DD') FROM ${TABLE_NAME} ORDER BY 1;")
+
+          for day in $days; do
+            echo "Exporting $day"
+            psql "$DB_URL" -c "\COPY (
+              SELECT *
+              FROM ${TABLE_NAME}
+              WHERE timestamp::date = DATE '$day'
+            ) TO 'table/${day}.csv' WITH CSV HEADER"
+          done
 
       - name: Commit and push
         run: |
@@ -51,5 +50,5 @@ jobs:
 
           cd repo
           git add table/
-          git commit --allow-empty -m "$YESTERDAY"
+          git commit --allow-empty -m "Update all tables"
           git push origin $BRANCH
