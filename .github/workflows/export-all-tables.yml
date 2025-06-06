@@ -1,0 +1,74 @@
+name: Export all tables
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export-all-tables:
+    runs-on: ubuntu-latest
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      TABLE_NAME: ${{ secrets.TABLE_NAME }}
+
+      OWNER: ${{ secrets.OWNER }}
+      REPO_NAME: ${{ secrets.REPO_NAME }}
+
+      REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}.git
+      REMOTE_BRANCH: main
+      REMOTE_TABLE_DIR: table
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PUSH_TOKEN }}
+
+      - name: Clone repo
+        run: |
+          git clone $REMOTE repo
+          cd repo
+          git checkout $REMOTE_BRANCH
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Export all days and update manifest
+        run: |
+          mkdir -p repo/$REMOTE_TABLE_DIR
+          MANIFEST="repo/$REMOTE_TABLE_DIR/MANIFEST_DAILY.txt"
+          touch "$MANIFEST"
+
+          sed -i -e '$a\' "$MANIFEST"
+
+          psql "$DB_URL" -t -c "SELECT DISTINCT TO_CHAR(timestamp::date, 'YYYY-MM-DD') FROM ${TABLE_NAME} ORDER BY 1;" > days.txt
+
+          while IFS= read -r day; do
+            day=$(echo "$day" | xargs)
+            if [ -z "$day" ]; then
+              continue
+            fi
+
+            FILE_PATH="repo/$REMOTE_TABLE_DIR/${day}.csv"
+            ENTRY="$REMOTE_TABLE_DIR/${day}.csv"
+
+            echo "Exporting $day to $FILE_PATH"
+            psql "$DB_URL" -c "\COPY (
+              SELECT * FROM ${TABLE_NAME}
+              WHERE timestamp::date = DATE '$day'
+            ) TO '$FILE_PATH' WITH CSV HEADER"
+
+            if ! grep -Fxq "$ENTRY" "$MANIFEST"; then
+              echo "$ENTRY" >> "$MANIFEST"
+            fi
+          done < days.txt
+
+      - name: Commit and push
+        run: |
+          cd repo
+          git add $REMOTE_TABLE_DIR/
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "Update all tables and manifest"
+          git push origin $REMOTE_BRANCH

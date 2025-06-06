@@ -1,0 +1,74 @@
+name: Export yesterday table
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  export-yesterday-table:
+    runs-on: ubuntu-latest
+    env:
+      DB_URL: ${{ secrets.DB_URL }}
+      TABLE_NAME: ${{ secrets.TABLE_NAME }}
+
+      OWNER: ${{ secrets.OWNER }}
+      REPO_NAME: ${{ secrets.REPO_NAME }}
+
+      REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}.git
+      REMOTE_BRANCH: main
+      REMOTE_TABLE_DIR: table
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PUSH_TOKEN }}
+
+      - name: Clone repo
+        run: |
+          git clone $REMOTE repo
+          cd repo
+          git checkout $REMOTE_BRANCH
+
+      - name: Set yesterday date
+        run: echo "YESTERDAY=$(date -u -d 'yesterday' +%F)" >> $GITHUB_ENV
+
+      - name: Install PostgreSQL client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Export yesterday to CSV inside repo
+        run: |
+          mkdir -p repo/$REMOTE_TABLE_DIR
+
+          CSV_PATH="repo/$REMOTE_TABLE_DIR/${YESTERDAY}.csv"
+          echo "Exporting $YESTERDAY to $CSV_PATH"
+
+          psql "$DB_URL" -c "\COPY (
+            SELECT * FROM ${TABLE_NAME}
+            WHERE timestamp::date = DATE '$YESTERDAY'
+          ) TO '$CSV_PATH' WITH CSV HEADER"
+
+      - name: Update manifest inside repo
+        run: |
+          ENTRY="$REMOTE_TABLE_DIR/${YESTERDAY}.csv"
+          MANIFEST="repo/$REMOTE_TABLE_DIR/MANIFEST_DAILY.txt"
+
+          touch "$MANIFEST"
+
+          sed -i -e '$a\' "$MANIFEST"
+
+          if ! grep -Fxq "$ENTRY" "$MANIFEST"; then
+            echo "$ENTRY" >> "$MANIFEST"
+          fi
+
+      - name: Commit and push
+        run: |
+          cd repo
+          git add $REMOTE_TABLE_DIR/
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "$YESTERDAY"
+          git push origin $REMOTE_BRANCH

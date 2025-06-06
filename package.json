@@ -1,0 +1,11 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0"
+  }
+}

@@ -1,0 +1,12 @@
+ii  postgresql-16                            16.9-1.pgdg24.04+1                            amd64        The World's Most Advanced Open Source Relational Database
+ii  postgresql-client-16                     16.9-1.pgdg24.04+1                            amd64        front-end programs for PostgreSQL 16
+ii  postgresql-client-common                 278.pgdg24.04+1                               all          manager for multiple PostgreSQL client versions
+ii  postgresql-common                        278.pgdg24.04+1                               all          PostgreSQL database-cluster manager
+ii  postgresql-common-dev                    278.pgdg24.04+1                               all          extension build tool for multiple PostgreSQL versions
+
+Package details:
+ii  postgresql-16                            16.9-1.pgdg24.04+1                            amd64        The World's Most Advanced Open Source Relational Database
+ii  postgresql-client-16                     16.9-1.pgdg24.04+1                            amd64        front-end programs for PostgreSQL 16
+ii  postgresql-client-common                 278.pgdg24.04+1                               all          manager for multiple PostgreSQL client versions
+ii  postgresql-common                        278.pgdg24.04+1                               all          PostgreSQL database-cluster manager
+ii  postgresql-common-dev                    278.pgdg24.04+1                               all          extension build tool for multiple PostgreSQL versions

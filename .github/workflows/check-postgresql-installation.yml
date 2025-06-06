@@ -1,6 +1,8 @@
 name: Check postgresql installation
 
 on:
+  schedule:
+    - cron: "0 0 1 */3 *"
   workflow_dispatch:
 
 permissions:
@@ -29,6 +31,5 @@ jobs:
       - name: Commit and push psql-check.txt
         run: |
           git add psql-check.txt
-          git commit --allow-empty -m "update postgresql package list"
+          git commit --allow-empty -m "update postgresql package list $(date '+%Y-%m-%d %H:%M:%S')"
           git push
-
