@@ -29,5 +29,6 @@ jobs:
       - name: Commit and push psql-check.txt
         run: |
           git add psql-check.txt
-          git commit -m "Add postgresql package list"
+          git commit --allow-empty -m "update postgresql package list"
           git push
+
