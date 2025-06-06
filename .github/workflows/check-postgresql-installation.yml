@@ -16,10 +16,10 @@ jobs:
 
       - name: List installed postgresql packages with details
         run: |
-          dpkg -l | grep postgres > psql-check.txt || echo "No postgresql packages found" > psql-check.txt
-          echo "" >> psql-check.txt
-          echo "Package details:" >> psql-check.txt
-          dpkg-query -l | grep postgres >> psql-check.txt || echo "No detailed package info" >> psql-check.txt
+          dpkg -l | grep postgres | tee psql-check.txt || echo "No postgresql packages found" | tee psql-check.txt
+          echo "" | tee -a psql-check.txt
+          echo "Package details:" | tee -a psql-check.txt
+          dpkg-query -l | grep postgres | tee -a psql-check.txt || echo "No detailed package info" | tee -a psql-check.txt
 
       - name: Configure git
         run: |
