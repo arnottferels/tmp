@@ -1,0 +1,33 @@
+name: Check postgresql installation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-postgresql:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: List installed postgresql packages with details
+        run: |
+          dpkg -l | grep postgres > psql-check.txt || echo "No postgresql packages found" > psql-check.txt
+          echo "" >> psql-check.txt
+          echo "Package details:" >> psql-check.txt
+          dpkg-query -l | grep postgres >> psql-check.txt || echo "No detailed package info" >> psql-check.txt
+
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push psql-check.txt
+        run: |
+          git add psql-check.txt
+          git commit -m "Add postgresql package list"
+          git push
