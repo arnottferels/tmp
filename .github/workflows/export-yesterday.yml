@@ -1,4 +1,4 @@
-name: Export Yesterday Table
+name: Export yesterday table
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  table:
+  export-yesterday:
     runs-on: ubuntu-latest
     env:
       TABLE_NAME: ${{ secrets.TABLE_NAME }}

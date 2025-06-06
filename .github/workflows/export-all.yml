@@ -1,4 +1,4 @@
-name: Export All Tables
+name: Export all tables
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  table-all:
+  export-all:
     runs-on: ubuntu-latest
     env:
       TABLE_NAME: ${{ secrets.TABLE_NAME }}
