@@ -34,17 +34,14 @@ jobs:
       - name: Install PostgreSQL client
         run: sudo apt-get install -y postgresql-client
 
-      - name: Export all days to CSV
+      - name: Export all days to CSV inside repo
         run: |
           mkdir -p repo/$REMOTE_TABLE_DIR
 
-          psql "$DB_URL" -t -c "SELECT DISTINCT TO_CHAR(timestamp::date, 'YYYY-MM-DD') FROM ${TABLE_NAME} ORDER BY 1;" > days.txt
-
+          psql "$DB_URL" -t -c "SELECT DISTINCT TO_CHAR(timestamp::date, 'YYYY-MM-DD') FROM ${TABLE_NAME} ORDER BY 1;" | \
           while IFS= read -r day; do
             day=$(echo "$day" | xargs)
-            if [ -z "$day" ]; then
-              continue
-            fi
+            if [ -z "$day" ]; then continue; fi
 
             FILE_PATH="repo/$REMOTE_TABLE_DIR/${day}.csv"
             echo "Exporting $day to $FILE_PATH"
@@ -52,7 +49,7 @@ jobs:
               SELECT * FROM ${TABLE_NAME}
               WHERE timestamp::date = DATE '$day'
             ) TO '$FILE_PATH' WITH CSV HEADER"
-          done < days.txt
+          done
 
       - name: Commit and push
         run: |
