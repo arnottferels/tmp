@@ -20,7 +20,7 @@ jobs:
 
       REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}.git
       REMOTE_BRANCH: main
-      REMOTE_TABLE_DIR: table
+      REMOTE_TABLE_DIR: table/csv/daily
 
     steps:
       - uses: actions/checkout@v3
@@ -50,19 +50,6 @@ jobs:
             SELECT * FROM ${TABLE_NAME}
             WHERE timestamp::date = DATE '$YESTERDAY'
           ) TO '$CSV_PATH' WITH CSV HEADER"
-
-      - name: Update manifest inside repo
-        run: |
-          ENTRY="$REMOTE_TABLE_DIR/${YESTERDAY}.csv"
-          MANIFEST="repo/$REMOTE_TABLE_DIR/MANIFEST_DAILY.txt"
-
-          touch "$MANIFEST"
-
-          sed -i -e '$a\' "$MANIFEST"
-
-          if ! grep -Fxq "$ENTRY" "$MANIFEST"; then
-            echo "$ENTRY" >> "$MANIFEST"
-          fi
 
       - name: Commit and push
         run: |
