@@ -1,0 +1,143 @@
+{
+  "/concept/guangzhou-stadium": {
+    "&^%": {
+      "/concept/guangzhou-stadium": 2
+    },
+    "@#$": 2
+  },
+  "/concept/helix-spire-symphony": {
+    "&^%": {
+      "/concept/helix-spire-symphony": 2
+    },
+    "@#$": 2
+  },
+  "/concept/north-star": {
+    "&^%": {
+      "/prototypes/north-star": 1
+    },
+    "@#$": 1
+  },
+  "/concept/orologio-cosmico": {
+    "&^%": {
+      "/concept/orologio-cosmico": 1
+    },
+    "@#$": 1
+  },
+  "/concept/serpentine-pavilion": {
+    "&^%": {
+      "/concept/serpentine-pavilion": 2
+    },
+    "@#$": 2
+  },
+  "/concept/weightless": {
+    "&^%": {
+      "/concept/weightless": 1
+    },
+    "@#$": 1
+  },
+  "/mention/2019/05/22/competition-of-innovation-and-architectural-facade-design-ideas-by-gbci": {
+    "&^%": {
+      "/mention/2019/05/22/competition-of-innovation-and-architectural-facade-design-ideas-by-gbci": 2
+    },
+    "@#$": 2
+  },
+  "/mention/2023/04/08/itb-graduated-2219-graduates-at-the-april-2023-graduation": {
+    "&^%": {
+      "/press/2023/04/08/itb-graduated-2219-graduates-at-the-april-2023-graduation": 1
+    },
+    "@#$": 1
+  },
+  "/post/2024/05/my-second-post": {
+    "&^%": {
+      "/blog/2024/05/my-second-post": 2
+    },
+    "@#$": 2
+  },
+  "/post/2024/12/new-article-published-in-ijac": {
+    "&^%": {
+      "/blog/2024/12/new-article-published-in-ijac": 2
+    },
+    "@#$": 2
+  },
+  "/research/dynamic-multi-layer-walkability-model-for-transit-oriented-movement": {
+    "&^%": {
+      "/research/doi/10.1177/14780771241254639": 10,
+      "/research/dynamic-multi-layer-walkability-model-for-transit-oriented-movement": 2
+    },
+    "@#$": 12
+  },
+  "/research/optimization-of-bipv-utilization-with-parametric-approach": {
+    "&^%": {
+      "/research/doi/10.18517/ijaseit.14.4.19773": 13,
+      "/research/optimization-of-bipv-utilization-with-parametric-approach": 4
+    },
+    "@#$": 17
+  },
+  "/work/acoustic-ray-simulation": {
+    "&^%": {
+      "/work/acoustic-ray-simulation": 1
+    },
+    "@#$": 1
+  },
+  "/work/algae-bio-facade-system": {
+    "&^%": {
+      "/work/algae-bio-facade-system": 1
+    },
+    "@#$": 1
+  },
+  "/work/beyond-static": {
+    "&^%": {
+      "/works/beyond-static": 1
+    },
+    "@#$": 1
+  },
+  "/work/circular-hub": {
+    "&^%": {
+      "/work/circular-hub": 1,
+      "/works/circular-hub": 1
+    },
+    "@#$": 2
+  },
+  "/work/container-village": {
+    "&^%": {
+      "/works/container-village": 1
+    },
+    "@#$": 1
+  },
+  "/work/kalideres-integrated-bus-terminal": {
+    "&^%": {
+      "/works/kalideres-integrated-bus-terminal": 2
+    },
+    "@#$": 2
+  },
+  "/work/kemayoran-a4b": {
+    "&^%": {
+      "/work/kemayoran-a4b": 1
+    },
+    "@#$": 1
+  },
+  "/work/rattan-charm": {
+    "&^%": {
+      "/work/rattan-charm": 2
+    },
+    "@#$": 2
+  },
+  "/work/rawa-buntu-station-2-0": {
+    "&^%": {
+      "/works/rawa-buntu-station-2-0": 1
+    },
+    "@#$": 1
+  },
+  "/work/topology-generated-structures": {
+    "&^%": {
+      "/work/topology-generated-structures": 3
+    },
+    "@#$": 3
+  },
+  "/work/x-transit-hub": {
+    "&^%": {
+      "/work/x-transit-hub": 3
+    },
+    "@#$": 3
+  }
+}

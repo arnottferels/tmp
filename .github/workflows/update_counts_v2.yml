@@ -1,4 +1,4 @@
-name: Update counts
+name: Update counts (v2)
 
 on:
   workflow_dispatch:

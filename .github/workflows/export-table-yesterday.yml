@@ -1,4 +1,4 @@
-name: Export yesterday table
+name: "Export table: Yesterday"
 
 on:
   schedule:
@@ -9,18 +9,24 @@ permissions:
   contents: write
 
 jobs:
-  export-yesterday-table:
+  export-table-yesterday:
     runs-on: ubuntu-latest
     env:
-      DB_URL: ${{ secrets.DB_URL }}
+      PROJECT_URL: ${{ secrets.PROJECT_URL }}
+      SERVICE_ROLE: ${{ secrets.SERVICE_ROLE }}
+
       TABLE_NAME: ${{ secrets.TABLE_NAME }}
 
-      OWNER: ${{ secrets.OWNER }}
+      REPO_OWNER: ${{ secrets.REPO_OWNER }}
       REPO_NAME: ${{ secrets.REPO_NAME }}
+      REPO_DIR: repo
 
-      REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/${{ secrets.OWNER }}/${{ secrets.REPO_NAME }}.git
+      REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git
       REMOTE_BRANCH: main
-      REMOTE_TABLE_DIR: table/csv/daily
+
+      REMOTE_TABLE_DIR: table/daily
+
+      SILENT: "1"
 
     steps:
       - uses: actions/checkout@v3
@@ -29,31 +35,23 @@ jobs:
 
       - name: Clone repo
         run: |
-          git clone $REMOTE repo
-          cd repo
+          git clone $REMOTE $REPO_DIR
+          cd $REPO_DIR
           git checkout $REMOTE_BRANCH
 
       - name: Set yesterday date
         run: echo "YESTERDAY=$(date -u -d 'yesterday' +%F)" >> $GITHUB_ENV
 
-      - name: Install PostgreSQL client
-        run: sudo apt-get install -y postgresql-client
-
-      - name: Export yesterday to CSV inside repo
+      - name: Run export script
         run: |
-          mkdir -p repo/$REMOTE_TABLE_DIR
-
-          CSV_PATH="repo/$REMOTE_TABLE_DIR/${YESTERDAY}.csv"
-          echo "Exporting $YESTERDAY to $CSV_PATH"
-
-          psql "$DB_URL" -c "\COPY (
-            SELECT * FROM ${TABLE_NAME}
-            WHERE timestamp::date = DATE '$YESTERDAY'
-          ) TO '$CSV_PATH' WITH CSV HEADER"
+          cd $REPO_DIR
+          npm install
+          npm run exportTable -- $TABLE_NAME -d $YESTERDAY
+          npm run format -- $REMOTE_TABLE_DIR -e json -- --log-level error
 
       - name: Commit and push
         run: |
-          cd repo
+          cd $REPO_DIR
           git add $REMOTE_TABLE_DIR/
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

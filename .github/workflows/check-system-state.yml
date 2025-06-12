@@ -17,22 +17,25 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Create output directory
+        run: mkdir -p system-info
+
       - name: PostgreSQL packages list
         run: |
-          dpkg -l | grep postgres > postgres-packages.txt || echo "No PostgreSQL packages found" > postgres-packages.txt
+          dpkg -l | grep postgres > system-info/postgres-packages.txt || echo "No PostgreSQL packages found" > system-info/postgres-packages.txt
 
       - name: PostgreSQL package details
         run: |
-          echo "PostgreSQL package details:" > postgres-details.txt
-          dpkg-query -l | grep postgres >> postgres-details.txt || echo "No detailed package info" >> postgres-details.txt
+          echo "PostgreSQL package details:" > system-info/postgres-details.txt
+          dpkg-query -l | grep postgres >> system-info/postgres-details.txt || echo "No detailed package info" >> system-info/postgres-details.txt
 
       - name: Node.js version
         run: |
-          node -v > node-version.txt || echo "Node.js not found" > node-version.txt
+          node -v > system-info/node-version.txt || echo "Node.js not found" > system-info/node-version.txt
 
       - name: Python version
         run: |
-          python3 --version > python-version.txt || echo "Python 3 not found" > python-version.txt
+          python3 --version > system-info/python-version.txt || echo "Python 3 not found" > system-info/python-version.txt
 
       - name: Configure git
         run: |
@@ -41,6 +44,6 @@ jobs:
 
       - name: Commit and push info files
         run: |
-          git add postgres-packages.txt postgres-details.txt node-version.txt python-version.txt
+          git add system-info/
           git commit --allow-empty -m "update system info $(date '+%Y-%m-%d %H:%M:%S')"
           git push
