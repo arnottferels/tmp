@@ -1,0 +1,46 @@
+name: Check system state
+
+on:
+  schedule:
+    - cron: "0 0 1 */3 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-system-state:
+    name: Check system state
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: PostgreSQL packages list
+        run: |
+          dpkg -l | grep postgres > postgres-packages.txt || echo "No PostgreSQL packages found" > postgres-packages.txt
+
+      - name: PostgreSQL package details
+        run: |
+          echo "PostgreSQL package details:" > postgres-details.txt
+          dpkg-query -l | grep postgres >> postgres-details.txt || echo "No detailed package info" >> postgres-details.txt
+
+      - name: Node.js version
+        run: |
+          node -v > node-version.txt || echo "Node.js not found" > node-version.txt
+
+      - name: Python version
+        run: |
+          python3 --version > python-version.txt || echo "Python 3 not found" > python-version.txt
+
+      - name: Configure git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and push info files
+        run: |
+          git add postgres-packages.txt postgres-details.txt node-version.txt python-version.txt
+          git commit --allow-empty -m "update system info $(date '+%Y-%m-%d %H:%M:%S')"
+          git push
