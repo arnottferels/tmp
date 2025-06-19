@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      const btn = document.createElement("button");
+      btn.textContent = "Copy Date";
+      btn.style.position = "fixed";
+      btn.style.left = "20vw";
+      btn.style.top = "20vh";
+
+      btn.onclick = () => {
+        const now = new Date();
+        const formatted = new Intl.DateTimeFormat("en-CA").format(now); // YYYY-MM-DD
+
+        navigator.clipboard
+          .writeText(formatted)
+          .then(() => alert("Copied: " + formatted))
+          .catch((err) => alert("Error: " + err.message));
+      };
+
+      document.body.appendChild(btn);
+    </script>
+  </body>
+</html>
