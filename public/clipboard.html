@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      (() => {
+        // create
+        const writeBtn = document.createElement("button");
+        writeBtn.textContent = "Write to Clipboard";
+        const readBtn = document.createElement("button");
+        readBtn.textContent = "Read from Clipboard";
+        const output = document.createElement("p");
+
+        // append
+        document.body.appendChild(writeBtn);
+        document.body.appendChild(readBtn);
+        document.body.appendChild(output);
+
+        // write
+        writeBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("Clipboard test text");
+            output.textContent = "Write successful";
+          } catch (err) {
+            output.textContent = "Write failed: " + err.message;
+          }
+        });
+
+        // read
+        readBtn.addEventListener("click", async () => {
+          try {
+            const text = await navigator.clipboard.readText();
+            output.textContent = "Read from clipboard: " + text;
+          } catch (err) {
+            output.textContent = "Read failed: " + err.message;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
