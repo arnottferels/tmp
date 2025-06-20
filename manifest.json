@@ -1,5 +1,5 @@
 {
-  "active": "v1",
+  "active": "v0",
   "versions": {
     "v1": {
       "url": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v1.json"
