@@ -1,5 +1,20 @@
 {
-  "live": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v1.json",
-  "latest": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.json",
-  "v1": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v1.json"
+  "active": "v1",
+  "versions": {
+    "v1": {
+      "url": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v1.json"
+    },
+    "v2": {
+      "url": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v2.json"
+    },
+    "v3": {
+      "url": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v3.json"
+    },
+    "v4": {
+      "url": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v4.json"
+    },
+    "v5": {
+      "url": "https://raw.githubusercontent.com/arnottferels/vc/refs/heads/main/c.v5.json"
+    }
+  }
 }
