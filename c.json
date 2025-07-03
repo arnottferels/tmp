@@ -23,6 +23,12 @@
     },
     "total_count": 1
   },
+  "/concept/pulse-tower": {
+    "paths_counts": {
+      "/concept/pulse-tower": 1
+    },
+    "total_count": 1
+  },
   "/concept/serpentine-pavilion": {
     "paths_counts": {
       "/concept/serpentine-pavilion": 2
@@ -44,6 +50,12 @@
   "/mention/2023/04/08/itb-graduated-2219-graduates-at-the-april-2023-graduation": {
     "paths_counts": {
       "/press/2023/04/08/itb-graduated-2219-graduates-at-the-april-2023-graduation": 1
+    },
+    "total_count": 1
+  },
+  "/post/2024/05/my-first-post": {
+    "paths_counts": {
+      "/post/2024/05/my-first-post": 1
     },
     "total_count": 1
   },
@@ -69,9 +81,9 @@
   "/research/optimization-of-bipv-utilization-with-parametric-approach": {
     "paths_counts": {
       "/research/doi/10.18517/ijaseit.14.4.19773": 13,
-      "/research/optimization-of-bipv-utilization-with-parametric-approach": 5
+      "/research/optimization-of-bipv-utilization-with-parametric-approach": 6
     },
-    "total_count": 18
+    "total_count": 19
   },
   "/work/acoustic-ray-simulation": {
     "paths_counts": {
@@ -130,9 +142,10 @@
   },
   "/work/rawa-buntu-station-2-0": {
     "paths_counts": {
+      "/work/rawa-buntu-station-2-0": 1,
       "/works/rawa-buntu-station-2-0": 1
     },
-    "total_count": 1
+    "total_count": 2
   },
   "/work/topology-generated-structures": {
     "paths_counts": {
