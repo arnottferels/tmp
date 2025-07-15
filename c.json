@@ -78,12 +78,18 @@
     },
     "total_count": 13
   },
+  "/research/enhancing-low-cost-apartment-performance": {
+    "paths_counts": {
+      "/research/enhancing-low-cost-apartment-performance": 1
+    },
+    "total_count": 1
+  },
   "/research/optimization-of-bipv-utilization-with-parametric-approach": {
     "paths_counts": {
       "/research/doi/10.18517/ijaseit.14.4.19773": 13,
-      "/research/optimization-of-bipv-utilization-with-parametric-approach": 8
+      "/research/optimization-of-bipv-utilization-with-parametric-approach": 9
     },
-    "total_count": 21
+    "total_count": 22
   },
   "/work/acoustic-ray-simulation": {
     "paths_counts": {
@@ -124,13 +130,19 @@
   },
   "/work/kemayoran-a4b": {
     "paths_counts": {
-      "/work/kemayoran-a4b": 1
+      "/work/kemayoran-a4b": 2
     },
-    "total_count": 1
+    "total_count": 2
   },
   "/work/mathematical-structures": {
     "paths_counts": {
       "/work/mathematical-structures": 1
+    },
+    "total_count": 1
+  },
+  "/work/nurture": {
+    "paths_counts": {
+      "/work/nurture": 1
     },
     "total_count": 1
   },
