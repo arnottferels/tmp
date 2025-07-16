@@ -1,33 +1,34 @@
-name: "Export table: All"
+name: "v2: Export vc table (Yesterday)" # ! non-test repo: "v2: Export table (Yesterday)"
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *" # ! non-test repo: "0 0 * * *"
 
 permissions:
   contents: write
 
 jobs:
-  export-table-all:
+  export-vc-table-yesterday: # ! non-test repo: "export-table-yesterday"
     runs-on: ubuntu-latest
     env:
       PROJECT_URL: ${{ secrets.PROJECT_URL }}
       SERVICE_ROLE: ${{ secrets.SERVICE_ROLE }}
 
-      TABLE_NAME: ${{ secrets.TABLE_NAME }}
+      TABLE_NAME: ${{ secrets.TABLE_NAME_VC }} # ! non-test repo: "secrets.TABLE_NAME"
 
-      REPO_OWNER: ${{ secrets.REPO_OWNER }}
       REPO_NAME: ${{ secrets.REPO_NAME }}
       REPO_DIR: repo
 
-      REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/${{ secrets.REPO_OWNER }}/${{ secrets.REPO_NAME }}.git
+      REMOTE: https://x-access-token:${{ secrets.PUSH_TOKEN }}@github.com/arnottferels/${{ secrets.REPO_NAME }}.git
       REMOTE_BRANCH: main
 
-      REMOTE_TABLE_DIR: table/daily
+      REMOTE_TABLE_DIR: table/${{ secrets.TABLE_NAME_VC }}/daily
 
       SILENT: "1"
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4.2.2
         with:
           token: ${{ secrets.PUSH_TOKEN }}
 
@@ -37,11 +38,14 @@ jobs:
           cd $REPO_DIR
           git checkout $REMOTE_BRANCH
 
+      - name: Set yesterday date
+        run: echo "YESTERDAY=$(date -u -d 'yesterday' +%F)" >> $GITHUB_ENV
+
       - name: Run export script
         run: |
           cd $REPO_DIR
           npm install
-          npm run exportTable -- $TABLE_NAME -d all
+          npm run exportTable -- $TABLE_NAME -d $YESTERDAY
           npm run format -- $REMOTE_TABLE_DIR -e json -- --log-level error
 
       - name: Commit and push
@@ -50,5 +54,5 @@ jobs:
           git add $REMOTE_TABLE_DIR/
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git commit --allow-empty -m "Update table: all"
+          git commit --allow-empty -m "${{ secrets.TABLE_NAME_VC }}(v2): Update table $YESTERDAY"
           git push origin $REMOTE_BRANCH

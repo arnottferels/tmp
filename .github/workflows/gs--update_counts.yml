@@ -1,4 +1,4 @@
-name: Update counts (v2)
+name: "gs: Update counts"
 
 on:
   workflow_dispatch:
