@@ -1,0 +1,66 @@
+name: "Sync"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_URL: ${{ secrets.PROJECT_URL }}
+      SERVICE_ROLE: ${{ secrets.SERVICE_ROLE }}
+
+      SRC_REMOTE_URL: https://x-access-token:${{ secrets.SRC_REPO_TOKEN }}@github.com/arnottferels/${{ secrets.SRC_REPO_NAME }}.git
+      SRC_REPO_DIR: src
+
+      PUBLIC_DIR: data/public
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+
+      - name: Set timestamp
+        run: echo "TIMESTAMP=$(date '+%Y-%m-%d %H:%M')" >> $GITHUB_ENV
+
+      - name: Clone source repo, run scripts, and commit there
+        run: |
+          set -e
+          git clone $SRC_REMOTE_URL $SRC_REPO_DIR >/dev/null 2>&1
+          cd $SRC_REPO_DIR
+
+          npm ci
+          npm run all:run
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add . >/dev/null 2>&1
+          git commit -m "Update $TIMESTAMP" >/dev/null 2>&1 || echo "No changes to commit"
+          git push origin main >/dev/null 2>&1
+          cd ..
+
+      - name: Copy public data from source to this repo
+        run: |
+          set -e
+          mkdir -p ./$PUBLIC_DIR
+          rsync -a --delete $SRC_REPO_DIR/$PUBLIC_DIR/ ./$PUBLIC_DIR/ >/dev/null 2>&1
+          rm -rf $SRC_REPO_DIR
+
+      - name: Commit and push public data in this repo
+        run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add $PUBLIC_DIR >/dev/null 2>&1
+          if ! git diff --cached --quiet; then
+            git commit -m "Update $TIMESTAMP" >/dev/null 2>&1
+            git push origin main >/dev/null 2>&1
+          else
+            echo "No changes in public data to commit"
+          fi
