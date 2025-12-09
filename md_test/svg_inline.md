@@ -1,0 +1,1 @@
+![fig1 svg](data:image/svg+xml;charset=utf-8,%3Csvg%20viewBox%3D%220%200%2048%2048%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M39%2036.9905L24%2011.0098L9%2036.9905H39Z%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E)
